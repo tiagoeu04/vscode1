@@ -4,105 +4,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviso Importante</title>
+    <title>Proposta para Leticia</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #2c2c2c;
+            /* Cinza espacial */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
             text-align: center;
-            margin: 50px;
+            position: relative;
+            /* Permite posicionamento absoluto */
         }
 
-        #foto {
-            width: 200px;
-            height: auto;
-            transition: width 0.3s ease;
+        .screen {
+            display: none;
+        }
+
+        .active {
+            display: block;
         }
 
         button {
-            margin: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
             padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
             font-size: 16px;
         }
 
-        #mensagem {
-            display: none;
-            font-size: 20px;
-            margin-top: 20px;
+        button:hover {
+            background-color: #45a049;
         }
 
-        #naoNamorar {
-            position: relative;
+        .back-button {
+            background-color: #f44336;
+            /* Vermelho para o botão voltar */
+        }
+
+        .back-button:hover {
+            background-color: #d32f2f;
+        }
+
+        .moving-button {
+            background-color: #f44336;
+            /* Vermelho */
+            color: white;
+            /* Texto branco */
+            position: absolute;
             /* Permite movimento */
-            transition: all 0.3s ease;
-            /* Animação suave */
+            transition: none;
+            /* Sem transição para movimento instantâneo */
+        }
+
+        .moving-button:hover {
+            background-color: #d32f2f;
+        }
+
+        .heart {
+            font-size: 50px;
+            color: red;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
     </style>
 </head>
 
 <body>
-    <div id="conteudoInicial">
-        <h1>Se você viu essa mulher, corra dela!</h1>
-        <img id="foto" src="IMG_5270.jpg" alt="Imagem de uma mulher suspeita">
-        <br>
-        <button id="sim">Sim</button>
-        <button id="nao">Não</button>
+    <div id="screen1" class="screen active">
+        <h1>Ei Leticia, tudo jóia?</h1>
+        <button onclick="showScreen('screen2')">Sim</button>
+        <button onclick="showScreen('screen3')">Não</button>
     </div>
 
-    <div id="mensagem"></div>
+    <div id="screen2" class="screen">
+        <h1>Fico muito feliz por isso! Espero que esteja bem.</h1>
+        <div class="heart">❤️</div>
+        <button class="back-button" onclick="showScreen('screen1')">Voltar</button>
+    </div>
+
+    <div id="screen3" class="screen">
+        <h1>Como posso te ajudar? Me diz algo no whatssap que o programador aqui vai se virar pra te ajudar.</h1>
+        <button class="moving-button" onclick="moveButton(this)">se voce clicar aqui eu vou te ajudar</button>
+        <button class="back-button" onclick="showScreen('screen1')">Voltar</button>
+    </div>
 
     <script>
-        const conteudoInicial = document.getElementById('conteudoInicial');
-        const mensagemDiv = document.getElementById('mensagem');
-        const simBtn = document.getElementById('sim');
-        const naoBtn = document.getElementById('nao');
+        function showScreen(screenId) {
+            // Esconde todas as telas
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            // Mostra a tela selecionada
+            document.getElementById(screenId).classList.add('active');
+        }
 
-        simBtn.addEventListener('click', function () {
-            conteudoInicial.style.display = 'none';
-            mensagemDiv.style.display = 'block';
-            mensagemDiv.innerHTML = `
-                <p>Fugi de uma mulher maluca.</p>
-                <button id="voltar">Voltar</button>
-            `;
-            document.getElementById('voltar').addEventListener('click', function () {
-                location.reload();
-            });
-        });
+        function moveButton(button) {
+            // Calcula posições aleatórias dentro da tela (evitando sair da borda)
+            const maxX = window.innerWidth - button.offsetWidth;
+            const maxY = window.innerHeight - button.offsetHeight;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
 
-        naoBtn.addEventListener('click', function () {
-            conteudoInicial.style.display = 'none';
-            mensagemDiv.style.display = 'block';
-            mensagemDiv.innerHTML = `
-                <p>Então te peguei, quer namorar comigo? Sim ou não.</p>
-                <button id="simNamorar">Sim</button>
-                <button id="naoNamorar">Não</button>
-            `;
-
-            // Evento para "Sim" no namoro
-            document.getElementById('simNamorar').addEventListener('click', function () {
-                mensagemDiv.innerHTML = `
-                    <p>Ótimo! Vamos marcar um encontro. 😊</p>
-                    <button id="voltarFinal">Voltar</button>
-                `;
-                document.getElementById('voltarFinal').addEventListener('click', function () {
-                    location.reload();
-                });
-            });
-
-            // Evento para "Não" no namoro - movimento aleatório
-            const naoNamorarBtn = document.getElementById('naoNamorar');
-            naoNamorarBtn.addEventListener('click', function () {
-                // Gera posições aleatórias dentro da tela
-                const maxX = window.innerWidth - naoNamorarBtn.offsetWidth;
-                const maxY = window.innerHeight - naoNamorarBtn.offsetHeight;
-                const randomX = Math.floor(Math.random() * maxX);
-                const randomY = Math.floor(Math.random() * maxY);
-
-                // Aplica a nova posição
-                naoNamorarBtn.style.position = 'absolute';
-                naoNamorarBtn.style.left = randomX + 'px';
-                naoNamorarBtn.style.top = randomY + 'px';
-            });
-        });
+            // Move o botão para a nova posição
+            button.style.left = randomX + 'px';
+            button.style.top = randomY + 'px';
+        }
     </script>
 </body>
 
